@@ -4,8 +4,10 @@ namespace Also;
 class Route {
     static public $routes = ['GET'=>[],'POST'=>[]];
     static public $publics = [];
+    static public $p404 = '404 | wrong url';
     public $req = ['data' => [], 'server' => []];
-    // public $req = new stdClass();
+    public $csrf = true;
+    public $test;
 
     public function __construct() { // ->getRoute(url,routes,method)
         if(isset($_SERVER['PATH_INFO'])) $url = $_SERVER['PATH_INFO'];
@@ -22,21 +24,23 @@ class Route {
 // from: __construct
 // to: urlMatch,getData,newCsrf,request,controller,getPublic
     private function getRoute($url,$routes,$method) { 
+        include_once ROOT.'mw/after.php';
         $action = $this->urlMatch($url,$method);
+        session_start();
         $this->getData($method);
         $this->newCsrf();
-        $req = $this->request();
+        $this->request();
         if($action !== null) {
             if(gettype($action) == 'object') {
                 header("HTTP/1.1 200 OK");
-                echo $action($req); // if function
-            } else if(gettype($action) == 'string') $this->controller($action,$req); // if controller
+                echo $action($this->req); // if function
+            } else if(gettype($action) == 'string') $this->controller($action); // if controller
         } else if($method == 'GET'){
             $file = $this->getPublic($url,self::$publics);
             if($file !== null) echo $file;
             else {
-                header("HTTP/1.0 404 Not Found");
-                echo '404 | wrong url';
+                header("HTTP/1.0 404 Not Found;");
+                echo self::$p404;
             }
         }
     }
@@ -44,18 +48,20 @@ class Route {
     private function getData($method) {
         if($method == 'GET') $data = $_GET;
         else if($method == 'POST') $data = $_POST;
-        if(isset($data) && isset($data['token'])) {
-            $token = $this->csrf($data['token']);
+        if(!$this->csrf) {
+            $this->req['data'] = $data;
+        } else if(isset($data) && isset($data['token'])) {
+            $token = $this->_csrf($data['token']);
             if($token) {
                 unset($data['token']);
                 $this->req['data'] = $data;
             }
         }
         unset($_GET);
+        unset($_POST);
     }
 
-    private function csrf($csrf) {
-        session_start();
+    private function _csrf($csrf) {
         $oldToken = $_SESSION['token'];
         if($csrf == $oldToken) return true;
         else return false;
@@ -63,9 +69,8 @@ class Route {
 
     private function newCsrf() {
         $_SESSION['token'] = bin2hex(random_bytes(32));
-        $csrf = '<input type="hidden" name="token" value="'.$_SESSION['token'].'">';
-        $this->req['token'] = $_SESSION['token'];
-        $this->req['csrf'] = $csrf;
+        $token = $_SESSION['token'];
+        $this->req['token'] = $token;
     }
 
     private function request() {
@@ -75,17 +80,17 @@ class Route {
         $this->req['server']['port'] = $port;
         $this->req['server']['agent'] = $agent;
         $this->req['server']['host'] = $host;
-        // $req['cookies'] = $_COOKIE;
         return $this->req;
     }
 
-    private function controller($action,$req) {
+    private function controller($action) {
         $action = explode('.',$action);
         if(count($action) == 2) {
             $controller = $action[0];
-            $method = $action[1];
+            $method = 'Also\\'.$action[1];
+            // include_once ROOT.'mw/after.php';
             include_once ROOT."controllers/${$controller}.php";
-            echo $method($req);
+            echo $method($this->req);
         }
     }
 
@@ -93,7 +98,16 @@ class Route {
         $urlArray = explode('/',$url);
         $routes = self::$routes[$method];
         foreach ($routes as $storedUrl => $route) {
-            if($storedUrl == $url) return $route;
+            $csrf = false;
+            if(substr( $storedUrl, 0, 1) === "!") {
+                $l = strlen($storedUrl);
+                $storedUrl = substr($storedUrl,$l - ($l-1) );
+                $csrf = true;
+            }
+            if($storedUrl == $url) {
+                if($csrf) $this->csrf = false;
+                return $route;
+            }
             else if(strpos($storedUrl,'{') !== false && count($urlArray) == count(explode('/',$storedUrl))) {
                 $urlPattern = preg_replace('/\{\\w*\}/','\\w*',$storedUrl);
                 $urlPattern = str_replace('/','\\/',$urlPattern);
@@ -108,6 +122,7 @@ class Route {
                             $this->req['data'][$varName] = $value;
                         }
                     }
+                    if($csrf) $this->csrf = false;
                     return $route;
                 }
             }
@@ -116,11 +131,13 @@ class Route {
     }
 
     private function getPublic($url,$routes) {
-        if(isset($routes[$url])) {
-            $array = explode('/',$url);
+        if(isset($routes[$url]) || isset($routes['('.$url.')'])) {
+            $array = explode('.',$url);
             $ext = $array[count($array)-1];
             $this->getHead($ext);
-            return file_get_contents(ROOT.$routes[$url]);
+            if(isset($routes['('.$url.')'])) {
+                return '(function(){'.file_get_contents(ROOT.$routes['('.$url.')']).'})();';
+            } else return file_get_contents(ROOT.$routes[$url]);
         } else return null;
     }
 
@@ -152,6 +169,4 @@ class Route {
        }
     }
 }
-
-
 ?>
