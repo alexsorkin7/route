@@ -51,25 +51,21 @@ class Route {
         if(!$this->csrf) {
             $this->req['data'] = $data;
         } else if(isset($data) && isset($data['token'])) {
-            $token = $this->_csrf($data['token']);
-            if($token) {
+            if($_SESSION['token'] == $data['token']) {
                 unset($data['token']);
                 $this->req['data'] = $data;
             }
         }
-        unset($_GET);
-        unset($_POST);
+        // unset($_GET);
+        // unset($_POST);
     }
 
-    private function _csrf($csrf) {
-        $oldToken = $_SESSION['token'];
-        if($csrf == $oldToken) return true;
-        else return false;
-    }
 
     private function newCsrf() {
-        $_SESSION['token'] = bin2hex(random_bytes(32));
-        $token = $_SESSION['token'];
+        // $token = bin2hex(random_bytes(32));
+        global $env;
+        $token = bin2hex($env->secret);
+        $_SESSION['token'] = $token;
         $this->req['token'] = $token;
     }
 
@@ -88,8 +84,7 @@ class Route {
         if(count($action) == 2) {
             $controller = $action[0];
             $method = 'Also\\'.$action[1];
-            // include_once ROOT.'mw/after.php';
-            include_once ROOT."controllers/${$controller}.php";
+            include_once ROOT."controllers/$controller.php";
             echo $method($this->req);
         }
     }
