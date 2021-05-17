@@ -1,0 +1,14 @@
+@extends(auth.layout)
+@section(title) Dashboard @endsection
+@section(header) Settings @endsection
+
+@section(content)
+
+<div>
+    <a href="/home" class="btn16 m2">Back to Dashboard</a>
+
+    @include(auth.home.changepassword)
+    @include(auth.home.personal)
+</div>
+@endsection
+

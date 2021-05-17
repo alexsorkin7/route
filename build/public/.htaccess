@@ -1,0 +1,9 @@
+AddDefaultCharset utf-8
+RewriteEngine on
+RewriteBase /
+
+# ErrorDocument 404 /404.html 
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?$1 [L]

@@ -1,0 +1,13 @@
+@extends(auth.layout)
+@section(title) Dashboard @endsection
+@section(header) Dashboard @endsection
+
+@section(content)
+<div class="m2">Hello @user.username</div>
+<div>
+    <a class="btn16" href="/settings">settings</a>
+    <a class="btn16" href="/logout">logout</a>
+</div>
+
+
+@endsection

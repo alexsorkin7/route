@@ -14,5 +14,11 @@
             "Also\\":""
         }
     },
-    "require": {}
+    "require": {
+        "also/validate": "^0.3",
+        "also/model": "^0.5",
+        "also/jpretty": "^0.11",
+        "also/mount": "^1.03",
+        "fakerphp/faker": "^1.14"
+    }
 }
