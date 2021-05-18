@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "als-ajax": "^3.0.0",
+    "als-bind": "4.0.0",
+    "als-simple-css": "1.2.1"
+  }
+}

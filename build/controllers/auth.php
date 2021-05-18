@@ -2,18 +2,18 @@
 namespace Also;
 
 function register($req) {
+    global $model;
     $errors = validate([
-        'email'=>'required|email|exists:users',
-        'username'=>'required|min:3|exists:users',
+        'email'=>'required|email|exists:user',
+        'username'=>'required|min:3|exists:user',
         'password'=>'required|num|uppers|symbols',
         'confirm'=>'required|confirm:password'
     ],$req['data']);
 
     if(count($errors) == 0) {
         unset($req['data']['confirm']);
-        $result = $model.insert([$req['data']]);
-        // get last id
-        // add id to session
+        $result = $model->model('user')->insert([$req['data']]);
+        if(isset($result['id'])) $_SESSION['user_id'] = $result['id'];
         return redirect('/home');
     } else {
         $old = $req['data'];
@@ -48,14 +48,19 @@ function logout($req) {
 
 function loginGet($req) {
     $errors = [];
-    if($_SESSION['user_id']) return redirect('/home');
-    else return mount('auth.auth.login',['auth'=>false,'errors' => $errors]);
+    $user_id = $_SESSION['user_id'];
+    if(!isset($user_id) || !$user_id) {
+        return mount('auth.auth.login',['auth'=>false,'errors' => $errors]);
+    } else if($user_id) return redirect('/home');
 }
 
 function registerGet($req) {
     $errors = [];
-    if($_SESSION['user_id']) return redirect('/home');
-    else return mount('auth.auth.register',['auth'=>false,'errors' => $errors]);
+    $user_id = $_SESSION['user_id'];
+    if(!isset($user_id) || !$user_id) {
+        return mount('auth.auth.register',['auth'=>false,'errors' => $errors]);
+    }else if($user_id) return redirect('/home');
+    
 }
 
 function isAuth($req) {

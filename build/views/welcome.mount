@@ -13,7 +13,7 @@
 
 <body>
     <div><img src="/imgs/logo.png" alt="als-server" width="200px"></div>
-    <div class="welcome">Simple.js</div>
+    <div class="welcome">Simple</div>
     <div style="display: flex; flex-direction: row;">
         <a href="login" style="margin: 1rem;">login</a>
         <a href="register" style="margin: 1rem;">register</a>

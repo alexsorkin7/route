@@ -65,7 +65,7 @@
             </small>
 
         </div>
-        @csrfi
+        @csrf
         <button class="btn1 m2" type="submit">Register</button>
         <a href="/login">Login</a>
     </form>

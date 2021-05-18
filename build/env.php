@@ -1,27 +1,27 @@
 <?php
 namespace Also;
 include_once 'vendor/autoload.php';
-define('ROOT',__DIR__.'\\');
+define('ROOT',__DIR__.'/');
 
 $env = (object) [
     'appName' => 'Simple',
-    'username' => 'admin',
-    'email' => 'admin@mail.com',
-    'password' => 'qwerty',
-    'secret' => 'JKo<��6yD�1ޤ�N%���dJVIq��O�',
-    'mountPath' => ROOT.'views',
-    'showErrors' => true,
-    'con' => ROOT.'db/data.db', // DataBase for sqlite
-    // 'con' => array("localhost","root","", "simple"), // DataBase for mySql
+    'username' => 'admin', // admin username
+    'email' => 'admin@mail.com', // admin email
+    'password' => 'qwerty', // admin password
+    'secret' => 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9', // for generating csrf token
+    'mountPath' => ROOT.'views', // path for mount(view) files
+    'showErrors' => true, // false - for disable all errors
+    // 'con' => ROOT.'db/data.db', // DataBase for sqlite
+    'con' => array("localhost","root","", "simple"), // DataBase for mySql
     'tablePath' => ROOT.'db/tables', // Place for tables for migration
-    'sessionPath' => ROOT.'/session',
+    'sessionPath' => ROOT.'/session', // folder for session files
     'sessionLifeTime' => 3600*24*7, // session life time in secconds
     'passwordHash' => PASSWORD_DEFAULT, // or PASSWORD_BCRYPT 
     // mail options
-    // app key for encryption?
 ];
 
 
+// "gmail" for gmail + set "Allow less secure apps: ON" - https://myaccount.google.com/lesssecureapps
 
 
 // Set model
@@ -38,7 +38,7 @@ $env = (object) [
     }
 
 // Set sqlite settings in php.ini
-    $phpPath = str_replace('php.exe', '', PHP_BINARY).'\\ext';
+    $phpPath = str_replace('php.exe', '', PHP_BINARY).'/ext';
     ini_set('extension','pdo_sqlite');
     ini_set('extension','sqlite3');
     ini_set('sqlite3.extension_dir',$phpPath);
