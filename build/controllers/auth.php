@@ -1,39 +1,35 @@
 <?php
 namespace Also;
 
-function register($req) {
-    global $model;
+function register($data) {
     $errors = validate([
-        'email'=>'required|email|exists:user',
-        'username'=>'required|min:3|exists:user',
+        'email'=>'required|email|notExists:user',
+        'username'=>'required|min:3|notExists:user',
         'password'=>'required|num|uppers|symbols',
         'confirm'=>'required|confirm:password'
-    ],$req['data']);
-
+    ],$data);
     if(count($errors) == 0) {
-        unset($req['data']['confirm']);
-        $result = $model->model('user')->insert([$req['data']]);
-        if(isset($result['id'])) $_SESSION['user_id'] = $result['id'];
+        unset($data['confirm']);
+        $user = model('user')->create($data);
+        if(isset($user['id'])) $_SESSION['user_id'] = $user['id'];
         return redirect('/home');
     } else {
-        $old = $req['data'];
+        $old = $data;
         return mount('/auth.auth.register',compact('errors','old'));
     }
 }
 
-function login($req) {
-    global $model;
-    $data = $req['data'];
+function login($data) {
+    $data = $data;
     $errors = validate([
         'password'=>'required|password:user',
-        'email'=>'required|email|notexists:user'
+        'email'=>'required|email'
     ],$data);
     if(count($errors) == 0) {
-        $result = $model->model('user')->where(["email='".$data['email']."'"]);
-        if(isset($result['result'])) {
-            $userData = $result['result'][0];
-            if(isset($userData)) {
-                $_SESSION['user_id'] = $userData['id'];
+        $user = model('user')->where('email',$data['email'])->get();
+        if(!isset($user['error'])) {
+            if(isset($user['id'])) {
+                $_SESSION['user_id'] = $user['id'];
                 return redirect('/home');
             } else return mount('auth.auth.login',['errors'=>'no such user']);
         } else return mount('auth.login',['errors'=>'db error']);
@@ -41,12 +37,12 @@ function login($req) {
 }
 
 
-function logout($req) {
+function logout($data) {
     $_SESSION['user_id'] = 0;
     return redirect('/login');
 }
 
-function loginGet($req) {
+function loginGet($data) {
     $errors = [];
     $user_id = $_SESSION['user_id'];
     if(!isset($user_id) || !$user_id) {
@@ -54,7 +50,7 @@ function loginGet($req) {
     } else if($user_id) return redirect('/home');
 }
 
-function registerGet($req) {
+function registerGet($data) {
     $errors = [];
     $user_id = $_SESSION['user_id'];
     if(!isset($user_id) || !$user_id) {
@@ -63,17 +59,16 @@ function registerGet($req) {
     
 }
 
-function isAuth($req) {
-    global $model;
+function isAuth($data) {
     $id = $_SESSION['user_id'];
     if($id) {
-        $result = $model->model('user')->where(["id='$id'"]);
-        if(isset($result['result'])) return $result['result'][0];
+        $user = model('user')->id($id)->get();
+        if(!isset($user['error'])) return $user;
     } else return null;
 }
 
-function home($req) {
-    $user = isAuth($req);
+function home($data) {
+    $user = isAuth($data);
     if($user !== null) {
         $auth = true;
         if($user['is_admin']) return mount('auth.home.admin',compact('user','auth'));
@@ -81,7 +76,7 @@ function home($req) {
     } else return redirect('/login');
 }
 
-function settings($req) {
+function settings($data) {
 //     if(req.data.password !== undefined) {
 //         let errors = await new Validator({
 //             password:'required|password:users',
@@ -109,8 +104,8 @@ function settings($req) {
 //     }
 }
 
-function settingsGet($req) {
-    $user = isAuth($req);
+function settingsGet($data) {
+    $user = isAuth($data);
     $auth = true;
     if($user !== null) return mount('auth.home.settings',compact('user','auth'));
 }

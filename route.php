@@ -5,7 +5,7 @@ class Route {
     static public $routes = ['GET'=>[],'POST'=>[]];
     static public $publics = [];
     static public $p404 = '404 | wrong url';
-    public $req = ['data' => [], 'server' => []];
+    public $data = [];
     public $csrf = true;
     public $test;
 
@@ -29,11 +29,10 @@ class Route {
         session_start();
         $this->getData($method);
         $this->newCsrf();
-        $this->request();
         if($action !== null) {
             if(gettype($action) == 'object') {
                 header("HTTP/1.1 200 OK");
-                echo $action($this->req); // if function
+                echo $action($this->data); // if function
             } else if(gettype($action) == 'string') $this->controller($action); // if controller
         } else if($method == 'GET'){
             $file = $this->getPublic($url,self::$publics);
@@ -49,11 +48,11 @@ class Route {
         if($method == 'GET') $data = $_GET;
         else if($method == 'POST') $data = $_POST;
         if(!$this->csrf) {
-            $this->req['data'] = $data;
+            $this->data = $data;
         } else if(isset($data) && isset($data['token'])) {
             if($_SESSION['token'] == $data['token']) {
                 unset($data['token']);
-                $this->req['data'] = $data;
+                $this->data = $data;
             }
         }
         // unset($_GET);
@@ -62,21 +61,10 @@ class Route {
 
 
     private function newCsrf() {
-        // $token = bin2hex(random_bytes(32));
         global $env;
         $token = bin2hex($env->secret);
         $_SESSION['token'] = $token;
         $this->req['token'] = $token;
-    }
-
-    private function request() {
-        $port = $_SERVER['SERVER_PORT'];
-        $host = $_SERVER['HTTP_HOST'];
-        $agent = $_SERVER['HTTP_USER_AGENT'];
-        $this->req['server']['port'] = $port;
-        $this->req['server']['agent'] = $agent;
-        $this->req['server']['host'] = $host;
-        return $this->req;
     }
 
     private function controller($action) {
@@ -85,7 +73,7 @@ class Route {
             $controller = $action[0];
             $method = 'Also\\'.$action[1];
             include_once ROOT."controllers/$controller.php";
-            echo $method($this->req);
+            echo $method($this->data);
         }
     }
 

@@ -18,8 +18,8 @@
         "App/"
     ],
     "require": {
-        "also/validate": "^0.32",
-        "also/model": "^0.51",
+        "also/validate": "^0.4",
+        "also/model": "^0.61",
         "also/jpretty": "^0.11",
         "also/mount": "^1.03",
         "fakerphp/faker": "^1.14"

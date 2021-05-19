@@ -11,8 +11,8 @@ $env = (object) [
     'secret' => 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9', // for generating csrf token
     'mountPath' => ROOT.'views', // path for mount(view) files
     'showErrors' => true, // false - for disable all errors
-    // 'con' => ROOT.'db/data.db', // DataBase for sqlite
-    'con' => array("localhost","root","", "simple"), // DataBase for mySql
+    'con' => ROOT.'db/data.db', // DataBase for sqlite
+    // 'con' => array("localhost","root","", "simple"), // DataBase for mySql
     'tablePath' => ROOT.'db/tables', // Place for tables for migration
     'sessionPath' => ROOT.'/session', // folder for session files
     'sessionLifeTime' => 3600*24*7, // session life time in secconds
@@ -24,11 +24,6 @@ $env = (object) [
 // "gmail" for gmail + set "Allow less secure apps: ON" - https://myaccount.google.com/lesssecureapps
 
 
-// Set model
-    $model = new Model($env->con);
-    $model->hash = $env->passwordHash;
-    $migrate = new Migration($env->tablePath,$model);
-    $migrate->cli();
 
 // php env.php serve port
     if(isset($argv[1]) && $argv[1] == 'serve') {
@@ -38,10 +33,10 @@ $env = (object) [
     }
 
 // Set sqlite settings in php.ini
-    $phpPath = str_replace('php.exe', '', PHP_BINARY).'/ext';
-    ini_set('extension','pdo_sqlite');
-    ini_set('extension','sqlite3');
-    ini_set('sqlite3.extension_dir',$phpPath);
+    // $phpPath = str_replace('php.exe', '', PHP_BINARY).'/ext';
+    // ini_set('extension','pdo_sqlite');
+    // ini_set('extension','sqlite3');
+    // ini_set('sqlite3.extension_dir',$phpPath);
 
 // Set session path and lifetime
     if(isset($env->sessionPath)) {
