@@ -11,7 +11,10 @@ function register($data) {
     if(count($errors) == 0) {
         unset($data['confirm']);
         $user = model('user')->create($data);
-        if(isset($user['id'])) $_SESSION['user_id'] = $user['id'];
+        if(isset($user['id'])) {
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['username'] = $user['username'];
+        }
         return redirect('/home');
     } else {
         $old = $data;
@@ -30,6 +33,7 @@ function login($data) {
         if(!isset($user['error'])) {
             if(isset($user['id'])) {
                 $_SESSION['user_id'] = $user['id'];
+                $_SESSION['username'] = $user['username'];
                 return redirect('/home');
             } else return mount('auth.auth.login',['errors'=>'no such user']);
         } else return mount('auth.login',['errors'=>'db error']);
@@ -38,29 +42,25 @@ function login($data) {
 
 
 function logout($data) {
-    $_SESSION['user_id'] = 0;
+    unset($_SESSION['user_id']);
     return redirect('/login');
 }
 
 function loginGet($data) {
     $errors = [];
-    $user_id = $_SESSION['user_id'];
-    if(!isset($user_id) || !$user_id) {
-        return mount('auth.auth.login',['auth'=>false,'errors' => $errors]);
-    } else if($user_id) return redirect('/home');
+    if(isset($_SESSION['user_id'])) {
+        return redirect('/home');
+    } else return mount('auth.auth.login',['auth'=>false,'errors' => $errors]);
 }
 
 function registerGet($data) {
     $errors = [];
-    $user_id = $_SESSION['user_id'];
-    if(!isset($user_id) || !$user_id) {
-        return mount('auth.auth.register',['auth'=>false,'errors' => $errors]);
-    }else if($user_id) return redirect('/home');
-    
+    if(isset($_SESSION['user_id'])) return redirect('/home');
+    else return mount('auth.auth.register',['auth'=>false,'errors' => $errors]);
 }
 
-function isAuth($data) {
-    $id = $_SESSION['user_id'];
+function isUser() {
+    $id = isAuth();
     if($id) {
         $user = model('user')->id($id)->get();
         if(!isset($user['error'])) return $user;
@@ -68,12 +68,18 @@ function isAuth($data) {
 }
 
 function home($data) {
-    $user = isAuth($data);
+    $user = isUser();
     if($user !== null) {
         $auth = true;
-        if($user['is_admin']) return mount('auth.home.admin',compact('user','auth'));
-        else if(!$user['is_admin']) return mount('auth.home.home',compact('user','auth'));
+        if($user['is_admin']) return mount('auth.home.admin');
+        else if(!$user['is_admin']) return mount('auth.home.home');
     } else return redirect('/login');
+}
+
+function isAuth() {
+    if(isset($_SESSION['user_id'])) {
+        return $_SESSION['user_id'];
+    } else return false;
 }
 
 function settings($data) {

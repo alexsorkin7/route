@@ -48,11 +48,11 @@ class Route {
         if($method == 'GET') $data = $_GET;
         else if($method == 'POST') $data = $_POST;
         if(!$this->csrf) {
-            $this->data = $data;
+            $this->data = array_merge($data,$this->data);
         } else if(isset($data) && isset($data['token'])) {
             if($_SESSION['token'] == $data['token']) {
                 unset($data['token']);
-                $this->data = $data;
+                $this->data = array_merge($data,$this->data);
             }
         }
         // unset($_GET);
@@ -72,8 +72,12 @@ class Route {
         if(count($action) == 2) {
             $controller = $action[0];
             $method = 'Also\\'.$action[1];
+            $ifAuth = false;
             include_once ROOT."controllers/$controller.php";
-            echo $method($this->data);
+            if($ifAuth) {
+                if(!isset($_SESSION['user_id'])) echo redirect('/login');
+                else echo $method($this->data);
+            } else echo $method($this->data);
         }
     }
 
@@ -102,7 +106,7 @@ class Route {
                             $varName = $storedUrlArray[$key];
                             $varName = str_replace('{','',$varName);
                             $varName = str_replace('}','',$varName);
-                            $this->req['data'][$varName] = $value;
+                            $this->data[$varName] = $value;
                         }
                     }
                     if($csrf) $this->csrf = false;

@@ -3,14 +3,9 @@ namespace Also;
 
 // Set model
 $model = new Model($env->con);
-// $model->hash = $env->passwordHash;
+$model->hash = $env->passwordHash;
 $migrate = new Migration($env->tablePath,$model);
 $migrate->cli();
-
-// function model($tableName) {
-//     global $model;
-//     return $model->model($tableName);
-// }
 
 function model($tableName) {
     global $env;
@@ -21,11 +16,8 @@ function model($tableName) {
 
 function validate($obj,$data) {
     global $model;
-    // global $env;
     $validate = new Validate($obj,$data,$model);
-    // $validate->hash = $env->passwordHash;
     return $validate->run();
-
 }
 
 
@@ -50,15 +42,3 @@ function redirect($location) {
     header("Location: $location");
     exit();
 }
-
-// function out($var){
-//     $string = json_encode($var);
-//     $string = str_replace('"','\\"',$string);
-//     echo shell_exec('node ..\mw\jpretty '.$string);
-// }
-
-// function mount($path,$variables = []) {
-//     global $env;
-//     $mount = new Mount($env->mountPath);
-//     return $mount->mount($path,$variables);
-// }

@@ -23,20 +23,12 @@ $env = (object) [
 
 // "gmail" for gmail + set "Allow less secure apps: ON" - https://myaccount.google.com/lesssecureapps
 
-
-
 // php env.php serve port
     if(isset($argv[1]) && $argv[1] == 'serve') {
         $port = 8000;
         if(isset($argv[2]) && is_numeric($argv[2])) $port = $argv[2];
         shell_exec("cd public && php -S localhost:$port");
     }
-
-// Set sqlite settings in php.ini
-    // $phpPath = str_replace('php.exe', '', PHP_BINARY).'/ext';
-    // ini_set('extension','pdo_sqlite');
-    // ini_set('extension','sqlite3');
-    // ini_set('sqlite3.extension_dir',$phpPath);
 
 // Set session path and lifetime
     if(isset($env->sessionPath)) {

@@ -1,7 +1,7 @@
-<div class="bgc-grey2 p2 flex space">
+<div class="bgc-white p2 flex space">
     <div><a href="/" class="text-m bold ml2">@appName</a></div>
-@if($auth)
-<div class="pointer p1 bold" onclick="__('#nav').class('hide','show')">@user['username'] &#9662;</div>
+@if($user_id)
+<div class="pointer p1 bold" onclick="__('#nav').class('hide','show')">@username &#9662;</div>
 
 <div class="pointer solid1 b-grey absolute bgc-white hide" css="right-1% top-60px" 
 onmouseleave="__(this).class('hide','show')" id="nav">
@@ -15,4 +15,5 @@ onmouseleave="__(this).class('hide','show')" id="nav">
     <a href="/register">register</a>
 </div>
 @endif
+
 </div>

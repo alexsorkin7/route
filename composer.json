@@ -19,9 +19,9 @@
     ],
     "require": {
         "also/validate": "^0.4",
-        "also/model": "^0.61",
+        "also/model": "^0.7",
         "also/jpretty": "^0.11",
-        "also/mount": "^1.03",
+        "also/mount": "^1.1",
         "fakerphp/faker": "^1.14"
     }
 }

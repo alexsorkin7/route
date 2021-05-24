@@ -4,20 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="/ajax.js"></script>
     <script src="/simple.js"></script>
     <script src="/sketch.js"></script>
     <title>@mount(title)</title>
     <script>_({
-        ".input":"p-.5rem_1rem o-0",
-        body:"m-0 tahoma",
+        ".input":"p-.5rem_1rem o-0 mt-1rem mb-1rem f:bc-blue",
+        body:"m-0 tahoma bgc-whitesmoke verdana",
     })</script>
 </head>
 <body>
     @include(auth.nav)
     <div>
         <div class="flex hcenter">
-            <div class="width6 min-height4 m2 solid1 b-grey white">
-                <div class="text-l p1 bold grey2">@mount(header)</div>
+            <div class="width6 min-height4 m2 white">
+                <div class="text-n p2 bold grey2 t-gray2 solid b-grey">@mount(header)</div>
                 <div class="p2">
                     @mount(content)
                 </div>
