@@ -3,7 +3,9 @@ namespace Also;
 include_once 'vendor/autoload.php';
 define('ROOT',__DIR__.'/');
 
+
 $env = (object) [
+    'publicFolder'=>'public',
     'appName' => 'Simple',
     'username' => 'admin', // admin username
     'email' => 'admin@mail.com', // admin email
@@ -27,7 +29,7 @@ $env = (object) [
     if(isset($argv[1]) && $argv[1] == 'serve') {
         $port = 8000;
         if(isset($argv[2]) && is_numeric($argv[2])) $port = $argv[2];
-        shell_exec("cd public && php -S localhost:$port");
+        shell_exec("cd $env->publicFolder && php -S localhost:$port");
     }
 
 // Set session path and lifetime

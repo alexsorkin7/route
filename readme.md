@@ -6,7 +6,7 @@ Php framewok. On development.
 ```php vendor\also\route\build.php```
 
 
-## Php version:
+## Requiments
 php 7.4+ for using arrow functions
 
 

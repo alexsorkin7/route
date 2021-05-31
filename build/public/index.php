@@ -3,9 +3,8 @@ namespace Also;
 include_once '../env.php';
 
 Route::get('/',fn() => mount('welcome'));
-Route::get('/test.php','test.test');
 
-Route::$p404 = include_once ROOT.'public/404.php';
+Route::$p404 = include_once ROOT.$env->publicFolder.'/public/404.php';
 // public routes
     Route::public('/ajax.js','node_modules/als-ajax/ajax.js');
     Route::public('/bind.js','node_modules/als-bind/bind.js');
