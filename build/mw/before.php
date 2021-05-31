@@ -39,7 +39,7 @@ function out($var) {
 
 function redirect($location) {
     if($location == 'back') $location = $_SERVER['HTTP_REFERER'];
-    else $location = $_REQUEST['HTTP_HOST'].$location;
+    // else $location = $_REQUEST['HTTP_HOST'].$location;
     header("Location: $location");
     exit();
 }
