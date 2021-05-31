@@ -1,0 +1,67 @@
+@extends(auth.layout)
+@section(title) Register @endsection
+@section(header) Register @endsection
+@section(content)
+@include(auth.nav)
+
+<div class="flex hcenter">
+    <div class="m2 white">
+        <div class="text-n p2 bold grey2 t-gray2 solid b-grey">Register</div>
+        <div class="p4">
+            <div class="flex center col">
+
+                <form action="/register" method="POST" id="register-form">
+                    <div class=" mt2 flex space">
+                        <div class="flex vcenter mr2">Email</div>
+                        <div>
+                            <input class="input" type="email" name="email" value="@old['email']" 
+                            form="register-form" placeholder="Enter valid email" required>
+                        </div>
+                    </div>
+                    <small><div class="pl2 t-red" id="email-error"></div></small>
+                    <div class="mb2  mt2 flex space">
+                        <div class="flex vcenter mr2">Username</div>
+                        <div>
+                            <input class="input" type="text" name="username"
+                            form="register-form" placeholder="Enter username" required>
+                        </div>
+                    </div>
+                    <small><div class="pl2 t-red" id="username-error"></div></small>
+                    <div class="mb2  mt2 flex space vcenter">
+                        <div class="flex  mr2">Password</div>
+                        <div>
+                            <span class="btn hblue2" onclick="__('#password').prop('type=password','type=text')">&#x1F441;</span>
+                            <input class="input" type="password" name="password" id="password" 
+                            form="register-form" placeholder="Enter password" required>
+                        </div>
+                    </div>
+                    <small><div class="pl2 t-red" id="password-error"></div></small>
+                    <div class="mb2  mt2 flex space vcenter">
+                        <div>Confirm</div>
+                        <div>
+                            <span class="btn hblue2" onclick="__('#confirm').prop('type=password','type=text')">&#x1F441;</span>
+                            <input class="input" type="password" name="confirm" id="confirm" 
+                            form="register-form" placeholder="confirm password" required>
+                        </div>
+                    </div>
+                    <small><div class="pl2 t-red" id="confirm-error"></div></small>
+                    @csrf
+
+                    <button class="m2" type="submit" id="register" disabled>Register</button>
+                    <a href="/login">Login</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="validate.js"></script>
+<script>
+    new Validator({
+        email: 'email|ajax',
+        confirm:'confirm:password',
+        password: 'min:7|required|num',
+        username: 'min:3'
+    }).form('register-form','input',true)
+</script>
+    
+@endsection

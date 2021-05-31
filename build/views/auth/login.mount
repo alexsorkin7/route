@@ -1,0 +1,60 @@
+@extends(auth.layout)
+@section(title) Login @endsection
+@section(header) Login @endsection
+@section(content)
+@include(auth.nav)
+
+<div>
+    <div class="flex hcenter">
+        <div class="m2 white">
+            <div class="text-n p2 bold grey2 t-gray2 solid b-grey">Login</div>
+            <div class="p4">
+                <div>
+                    <div class="flex center min-width3">
+                        @errors[0]
+                        <div id="login">
+                            <form action="/login" method="POST">
+                                <div>
+                                    <div><label for="email">Enter registered email</label></div>
+                                    <input class="input mb2" type="text" name="email" value="@old['email']" placeholder="email">
+                                    <small>
+                                    <?php
+                                        if(isset($errors['email'])) {
+                                            foreach($errors['email'] as $e) {
+                                                echo "<div class=\"pl2 t-red width2\">* $e</div>";
+                                            }
+                                        }
+                                    ?>
+                                    </small>
+                                </div>
+                                <div>
+                                    <div><label for="password">Password</label></div>
+                                    <input class="input mb2" type="password" name="password" value="@old['password']" placeholder="password">
+                                    <small>
+                                    <?php
+                                        if(isset($errors['password'])) {
+                                            foreach($errors['password'] as $e) {
+                                                echo "<div class=\"pl2 t-red width2\">* $e</div>";
+                                            }
+                                        }
+                                    ?>
+                                    </small>
+                                </div>
+                                @csrf
+                                <div>
+                                    <button class="btn1 m2" type="submit">Login</button>
+                                    <a href="/register">Register</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+@endsection

@@ -9,6 +9,7 @@ function mount($path,$variables = []) {
     if(isset($_SESSION['user_id'])) {
         $variables['user_id'] = $_SESSION['user_id'];
         $variables['username'] = $_SESSION['username'];
+        $variables['is_admin'] = $_SESSION['is_admin'];
     } else $variables['user_id'] = false;
     $variables['csrf'] = $csrf;
     $variables['token'] = $token;
@@ -61,6 +62,11 @@ function getBaseUrl($array=false) {
         return htmlspecialchars($protocol."://".$host.$port, ENT_QUOTES); 
         // return htmlspecialchars($protocol."://".$host.$port.$dir, ENT_QUOTES); 
     } else { return ["protocol" => $protocol, "host" => $host, "port" => $port, "dir" => $dir]; }
+}
+
+function isAjax() {
+    if(isset($_SERVER['HTTP_AJAX'])) return true;
+    else return false;
 }
 
 ?>

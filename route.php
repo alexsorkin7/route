@@ -24,12 +24,15 @@ class Route {
 // from: __construct
 // to: urlMatch,getData,newCsrf,request,controller,getPublic
     private function getRoute($url,$routes,$method) { 
-        include_once ROOT.'mw/after.php';
-        $action = $this->urlMatch($url,$method);
         session_start();
-        $this->getData($method);
-        $this->newCsrf();
+        $url = $this->getData($method,$url);
+        $action = $this->urlMatch($url,$method);
+        include_once ROOT.'mw/after.php';
         if($action !== null) {
+            if($this->csrf) {
+                $this->newCsrf();
+                if(isset($_SERVER['HTTP_AJAX'])) header('Etag:'.$_SESSION['token']);
+            }
             if(gettype($action) == 'object') {
                 header("HTTP/1.1 200 OK");
                 echo $action($this->data); // if function
@@ -44,9 +47,18 @@ class Route {
         }
     }
 
-    private function getData($method) {
-        if($method == 'GET') $data = $_GET;
-        else if($method == 'POST') $data = $_POST;
+    private function getData($method,$url) {
+        if($method == 'GET' && strpos($url,'?') !== false) {
+            $strData = explode('?',$url);
+            $url = $strData[0];
+            $strData = $strData[1];
+            $array = explode('&',$strData);
+            $data = [];
+            foreach ($array as $key => $value) {
+                $var = explode('=',$value);
+                $data[$var[0]] = \urldecode($var[1]);
+            }
+        } else if($method == 'POST') $data = $_POST;
         if(!$this->csrf) {
             $this->data = array_merge($data,$this->data);
         } else if(isset($data) && isset($data['token'])) {
@@ -55,16 +67,18 @@ class Route {
                 $this->data = array_merge($data,$this->data);
             }
         }
-        // unset($_GET);
-        // unset($_POST);
+        return $url;
     }
-
 
     private function newCsrf() {
         global $env;
-        $token = bin2hex($env->secret);
-        $_SESSION['token'] = $token;
-        $this->req['token'] = $token;
+        $_SESSION['token'] = sha1(mt_rand(1, 90000) . $env->secret);
+        // $_SESSION['token'] = bin2hex(random_bytes(32));
+        // if (function_exists('mcrypt_create_iv')) {
+        //     $_SESSION['token'] = bin2hex(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
+        // } else {
+        //     $_SESSION['token'] = bin2hex(openssl_random_pseudo_bytes(32));
+        // }
     }
 
     private function controller($action) {
@@ -74,6 +88,7 @@ class Route {
             $method = 'Also\\'.$action[1];
             $ifAuth = false;
             include_once ROOT."controllers/$controller.php";
+            header("HTTP/1.1 200 OK");
             if($ifAuth) {
                 if(!isset($_SESSION['user_id'])) echo redirect('/login');
                 else echo $method($this->data);

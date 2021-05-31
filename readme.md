@@ -1,10 +1,14 @@
 ## About
 Php framewok. On development. 
 
+## Install
+```composer require also/route```
+```php vendor\also\route\build.php```
+
 
 ## Php version:
 php 7.4+ for using arrow functions
-php 7.0+ for generating csrf token
+
 
 
 redirect('route') - without first /
@@ -36,3 +40,12 @@ Adding ``$ifAuth = true;`` on controller checks if user loged in. If not, page r
 namespace Also;
 $ifAuth = true;
 ```
+
+## Ajax requests
+
+You can do ajax request, but on every request you need to renew csrf token. 
+
+To do thata, you need to send request with `ajax:ajax` header. 
+The response header will include ``Etag:newToken``. Now you need to update all input fields with ``[name=token]``.
+
+You can use als-ajax which allready include all necessary. 

@@ -2,9 +2,10 @@
 
 function recurseCopy($src,$dst, $childFolder='') { 
     $dir = opendir($src); 
-    mkdir($dst);
+    if(!file_exists($dst)) mkdir($dst);
     if ($childFolder!='') {
-        mkdir($dst.'/'.$childFolder);
+        $folder = $dst.'/'.$childFolder;
+        if(!file_exists($folder)) mkdir($folder);
         while(false !== ( $file = readdir($dir)) ) { 
             if (( $file != '.' ) && ( $file != '..' )) { 
                 if ( is_dir($src . '/' . $file) ) { 

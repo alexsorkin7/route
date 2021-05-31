@@ -1,0 +1,11 @@
+
+<div class="flex">
+    <div class="min-width2 white" css="h-100vh">Nav</div>
+    <div class="scroll stretch">
+        <div css="h-100vh">
+            <div css="sticky top-0%">@include(auth.nav)</div>
+            
+            Admin section
+        </div>        
+    </div>
+</div>

@@ -3,11 +3,14 @@
     <legend>Change personal data</legend>
 
 <form action="/settings" method="post">
-    @csrfi
-    <input type="hidden" name="id" value="@user['id']">
+    @csrf
+    <input type="hidden" name="id" value="@user_id">
     <label for="username">Username</label>
     <div class="m1">
-        <input class="input" type="text" name="username" value="@user['username']" placeholder="username">
+        <input class="input" type="text" name="username" value="@user['username']" placeholder="username" required>
+        @foreach($errors['username'] as $e) 
+            <div class="t-red"><small>@e</small></div>
+        @endforeach
     </div>
     <label for="name">Name</label>
     <div class="m1">

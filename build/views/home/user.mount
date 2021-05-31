@@ -1,0 +1,15 @@
+<div>
+    <div class="flex hcenter">
+        <div class="width6 min-height4 m2 white">
+            <div class="text-n p2 bold grey2 t-gray2 solid b-grey">Dashboard</div>
+            <div class="p2">
+                <div>
+                    <a class="btn16" href="/settings">settings</a>
+                    <a class="btn16" href="/logout">logout</a>
+                    <div class="m2">Hello @username</div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>

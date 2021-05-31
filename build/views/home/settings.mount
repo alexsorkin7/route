@@ -1,14 +1,16 @@
+
 @extends(auth.layout)
 @section(title) Dashboard @endsection
 @section(header) Settings @endsection
 
 @section(content)
+@include(auth.nav)
 
 <div>
     <a href="/home" class="btn16 m2">Back to Dashboard</a>
 
-    @include(auth.home.changepassword)
-    @include(auth.home.personal)
+    @include(home.changepassword)
+    @include(home.personal)
 </div>
 @endsection
 

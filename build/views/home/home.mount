@@ -1,0 +1,14 @@
+@extends(auth.layout)
+@section(title) Dashboard @endsection
+
+
+@section(content)
+
+@if($is_admin) 
+@include(home.admin)
+@else
+    @include(auth.nav)
+    @include(home.user)
+@endif
+
+@endsection

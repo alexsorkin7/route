@@ -7,6 +7,7 @@
     <script src="/ajax.js"></script>
     <script src="/simple.js"></script>
     <script src="/sketch.js"></script>
+    <script src="/bind.js"></script>
     <title>@mount(title)</title>
     <script>_({
         ".input":"p-.5rem_1rem o-0 mt-1rem mb-1rem f:bc-blue",
@@ -14,17 +15,16 @@
     })</script>
 </head>
 <body>
-    @include(auth.nav)
-    <div>
-        <div class="flex hcenter">
-            <div class="width6 min-height4 m2 white">
-                <div class="text-n p2 bold grey2 t-gray2 solid b-grey">@mount(header)</div>
-                <div class="p2">
-                    @mount(content)
-                </div>
-            </div>
-            </div>
-        
-    </div>
+    @mount(content)
 </body>
+
+<script>
+    function confirmPass(value,id,button) {
+        let confirm = Bind.$(id).$('value')
+        console.log(value,confirm);
+        if(value == confirm) Bind.$(button)._('disabled')
+        else Bind.$(button).$('disabled',true);
+    }
+</script>
+
 </html>
