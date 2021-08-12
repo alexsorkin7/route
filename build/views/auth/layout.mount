@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script src="/ajax.js"></script>
-    <script src="/simple.js"></script>
-    <script src="/sketch.js"></script>
-    <script src="/bind.js"></script>
+    <script src="/ajax/js"></script>
+    <script src="/simple/js"></script>
+    <script src="/sketch/js"></script>
+    <script src="/bind/js"></script>
     <title>@mount(title)</title>
     <script>_({
         ".input":"p-.5rem_1rem o-0 mt-1rem mb-1rem f:bc-blue",
