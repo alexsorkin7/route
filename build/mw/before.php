@@ -1,19 +1,6 @@
 <?php
 namespace Also;
 
-// Set model
-$model = new Model($env->con);
-$model->hash = $env->passwordHash;
-$migrate = new Migration($env->tablePath,$model);
-$migrate->cli();
-
-function model($tableName) {
-    global $env;
-    $model = new Model($env->con);
-    return $model->table($tableName);
-}
-
-
 function validate($obj,$data) {
     global $model;
     $validate = new Validate($obj,$data,$model);

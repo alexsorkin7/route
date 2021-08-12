@@ -2,9 +2,11 @@
 Php framewok. On development. 
 
 ## Install
-```composer require also/route```
-```php vendor\also\route\build.php```
-
+1. Install the package - ```composer require also/route```
+2. Build framework files and folders - ```php vendor\also\route\build.php```
+3. Install node modules - ```npm install```
+4. Change env.php variables
+5. Migrate db - ```php env.php migrate```
 
 ## Requiments
 php 7.4+ for using arrow functions
@@ -12,6 +14,11 @@ php 7.4+ for using arrow functions
 ## Basics
 After installing also/route, you need to build it with ```php vendor\also\route\build.php```. 
 This operation will copy the content of build folder. Now you have structure of files and folder. 
+
+mount - https://packagist.org/packages/also/mount
+model - https://packagist.org/packages/also/model
+validate - https://packagist.org/packages/also/validate
+
 
 **env.php** - has the environment variables and settings. 
 **public/index.php** - has routes for your application

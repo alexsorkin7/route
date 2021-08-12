@@ -23,6 +23,18 @@ $env = (object) [
 ];
 
 
+// Set model
+$model = new Model($env->con);
+$model->hash = $env->passwordHash;
+$migrate = new Migration($env->tablePath,$model);
+$migrate->cli();
+
+function model($tableName) {
+    global $env;
+    $model = new Model($env->con);
+    return $model->table($tableName);
+}
+
 // "gmail" for gmail + set "Allow less secure apps: ON" - https://myaccount.google.com/lesssecureapps
 
 // php env.php serve port
